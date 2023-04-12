@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './index.css';
-import moment from 'moment'
+import moment from 'moment';
+import { RxDoubleArrowRight, RxDoubleArrowLeft } from 'react-icons/rx'
 
 
 function SimpleCalender() {
@@ -77,31 +78,40 @@ function SimpleCalender() {
 
   return (
       <div className="container">
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <button onClick={() => prevMonth()}>prev</button>
+        <div className='header'>
+          <button className="arrow_btns" onClick={() => prevMonth()}>
+            <RxDoubleArrowLeft />
+          </button>
           <p>{calenderTitle}</p>
-          <button onClick={() => nextMonth()}>next</button>
+          <button className="arrow_btns" onClick={() => nextMonth()}>
+            <RxDoubleArrowRight />
+          </button>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className='month_label_container'>
           {months.map((month, i) => (
-            <div key={i} style={{ height: '50px', width: '50px', border: '1px solid black', ...centerStyle }}>{month.title}</div>
+            <div key={i} className="month_labels" style={{ ...centerStyle }}>{month.title}</div>
           ))}
 
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+        <div className='days_container'>
           {initialBlocks.map((_, i) => (
-            <div key={i} style={{ height: '50px', width: '50px', border: '1px solid black' }} />
+            <div key={i} className="grid" />
           ))}
           {daysArray.map((day, i) => (
             <div key={i}>
               {isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && (
-                <div style={{ height: '50px', width: '50px', border: '1px solid black', backgroundColor: 'red', ...centerStyle }}>{day.number}</div>
+                <div className='grid_current_date' style = {{ ...centerStyle }}>{day.number}</div>
               )}
               {isDisabled(`${year}-${month}-${day.number}`) && (
-                <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)} style={{ height: '50px', width: '50px', border: '1px solid black', backgroundColor: "grey", ...centerStyle }}>{day.number}</div>
+                <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)} className="grid_disabled" style={{ ...centerStyle }}>{day.number}</div>
               )}
               {!isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && !isDisabled(`${year}-${month}-${day.number}`) && (
-                <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)} style={{ height: '50px', width: '50px', border: '1px solid black', backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "yellow" : 'white', ...centerStyle }}>{day.number}</div>
+                <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)} 
+                style={{ 
+                  backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white', 
+                  color: !isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white', 
+                  ...centerStyle 
+                }}  className="grid">{day.number}</div>
               )}
             </div>
           ))}

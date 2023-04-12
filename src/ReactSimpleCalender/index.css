@@ -1,5 +1,101 @@
 .container {
-  width: 364px;
+  width: 308px;
   height: auto;
-  border: 1px solid red
+  border: .5px solid rgb(228, 228, 228);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: -1px 19px 19px -14px rgba(145,129,129,0.31);
+-webkit-box-shadow: -1px 19px 19px -14px rgba(145,129,129,0.31);
+-moz-box-shadow: -1px 19px 19px -14px rgba(145,129,129,0.31);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.month_label_container {
+  background-color: lightgrey;
+  text-transform: capitalize;
+  font-weight: 400;
+  font-size: 14px;
+  display: flex; 
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.month_labels {
+  height: 36px;
+  width: 36px; 
+  margin: 4;
+  border-radius: 50%;
+  border: 0px solid black;
+  font-size: 12px;
+
+}
+
+.days_container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%
+}
+
+.grid {
+  height: 36px;
+  width: 36px;
+  background-color: white;
+  border-radius: 50%;
+  margin: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.grid:hover {
+  margin: 3px;
+  border: .5px solid lightgray;
+}
+
+.grid_current_date {
+  height: 36px;
+  color: white;
+  width: 36px;
+  background-color: rgb(96, 166, 223);
+  /* border: .5px solid blue; */
+  border-radius: 50%;
+  color: white;
+  margin: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.grid_disabled {
+  height: 36px;
+  width: 36px;
+  background-color: rgb(235, 231, 231);
+  color: grey;
+  border: 0px solid black;
+  border-radius: 50%;
+  margin: 4px;
+  font-size: 12px;
+
+}
+
+.arrow_btns {
+  background-color: transparent;
+  margin: 5px;
+  border: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow_btns:hover {
+  cursor: pointer;
 }
