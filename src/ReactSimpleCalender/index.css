@@ -57,6 +57,14 @@
   cursor: pointer;
 }
 
+.grid_null {
+  height: 36px;
+  width: 36px;
+  background-color: white;
+  border-radius: 50%;
+  margin: 4px;
+}
+
 .grid:hover {
   margin: 3px;
   border: .5px solid lightgray;
@@ -78,7 +86,7 @@
 .grid_disabled {
   height: 36px;
   width: 36px;
-  background-color: rgb(235, 231, 231);
+  background-color: rgba(241, 235, 235, 0.664);
   color: grey;
   border: 0px solid black;
   border-radius: 50%;

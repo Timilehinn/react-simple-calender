@@ -12,8 +12,9 @@ import { MdKeyboardDoubleArrowRight, MdKeyboardDoubleArrowLeft, MdKeyboardArrowR
  * @param selectedDates array
  * @param setSelectedDates setStateAction
  * @param mode <string> "single" | "multiple" defines how many dates can be selected
+ * @param minSelectable <string> "YYYY-MM-DD" defines the minimum date that can be selected anything before is disabled 
  */
-function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode }) {
+function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSelectable }) {
 
   const [year, setYear] = useState(2023)
   const [month, setMonth] = useState(4)
@@ -102,6 +103,17 @@ function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode }) {
   let calenderTitle = moment(new Date(`${year}-${month}-${new Date().getDate()}`)).format("MMMM YYYY");
 
 
+  const isSelectable = (d) => {
+    if (minSelectable) {
+      const d_1 = moment(d)
+      const d_2 = moment(minSelectable)
+
+      return d_1.isBefore(d_2)
+    } else {
+      return false
+    }
+  }
+
 
   return (
     <div className="container">
@@ -133,31 +145,38 @@ function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode }) {
       </div>
       <div className='days_container'>
         {initialBlocks.map((_, i) => (
-          <div key={i} className="grid" />
+          <div key={i} className="grid_null" />
         ))}
         {daysArray.map((day, i) => (
           <div key={i}>
-            {!isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && (
-              <div onClick={() => isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) ? null : selectedDate(`${year}-${month}-${day.number}`)} className='grid_current_date' style={{ ...centerStyle, backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'rgb(96, 166, 223)', }}>{day.number}</div>
-            )}
-            {isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && (
+            {isSelectable(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) ? (
               <div className="grid_disabled" style={{ ...centerStyle }}>{day.number}</div>
-            )}
-            {!isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && !isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && (
-              <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)}
-                onMouseOver={() => {
-                  setIsHover(true)
-                }}
-                onMouseLeave={() => {
-                  setIsHover(false)
-                }}
-                style={{
-                  backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
-                  color: !isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
-                  ...centerStyle
-                }} className="grid">{day.number}</div>
+            ) : (
+              <div >
+                {!isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && (
+                  <div onClick={() => isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) ? null : selectedDate(`${year}-${month}-${day.number}`)} className='grid_current_date' style={{ ...centerStyle, backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'rgb(96, 166, 223)', }}>{day.number}</div>
+                )}
+                {isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && (
+                  <div className="grid_disabled" style={{ ...centerStyle }}>{day.number}</div>
+                )}
+                {!isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && !isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && (
+                  <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)}
+                    onMouseOver={() => {
+                      setIsHover(true)
+                    }}
+                    onMouseLeave={() => {
+                      setIsHover(false)
+                    }}
+                    style={{
+                      backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
+                      color: !isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
+                      ...centerStyle
+                    }} className="grid">{day.number}</div>
+                )}
+              </div>
             )}
           </div>
+
         ))}
       </div>
     </div>
