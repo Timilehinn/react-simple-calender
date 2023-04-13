@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react';
 import './index.css';
 import moment from 'moment';
-import { RxDoubleArrowRight, RxDoubleArrowLeft } from 'react-icons/rx'
+import { RxDoubleArrowRight, RxDoubleArrowLeft } from 'react-icons/rx';
+import { MdKeyboardDoubleArrowRight, MdKeyboardDoubleArrowLeft, MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md'
 
-
-function SimpleCalender() {
+/**
+ * 
+ * @param disabled takes in an array of dates in format: 2023-4-13
+ * @returns blocks out specified dates
+ * 
+ * @param selectedDates array
+ * @param setSelectedDates setStateAction
+ * @param mode <string> "single" | "multiple" defines how many dates can be selected
+ */
+function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode }) {
 
   const [year, setYear] = useState(2023)
   const [month, setMonth] = useState(4)
-  const [selectedDates, setSelectedDates] = useState([])
-  const disabled = ["2023-4-13"]
+  const [isHover, setIsHover] = useState(false)
+  // const [selectedDates, setSelectedDates] = useState([])
+  // const disabled = ["2023-4-13"]
 
   let currentDate = moment(new Date()).format("YYYY-MM-DD");
 
@@ -48,16 +58,32 @@ function SimpleCalender() {
     }
   }
 
+
+  function prevYear() {
+    setYear(year - 1)
+  }
+
+  function nextYear() {
+    setYear(year + 1)
+  }
+
+
   function selectedDate(d) {
-    const isSelected = selectedDates.find(date => date == d)
-    if (isSelected) {
-      var filteredDates = selectedDates.filter(date => date !== d)
-      setSelectedDates(filteredDates)
-    } else {
-      setSelectedDates((prev) => {
-        return [...prev, d]
-      })
+    if (mode == "single") {
+      setSelectedDates([d])
     }
+    if (mode == 'multiple') {
+      const isSelected = selectedDates.find(date => date == d)
+      if (isSelected) {
+        var filteredDates = selectedDates.filter(date => date !== d)
+        setSelectedDates(filteredDates)
+      } else {
+        setSelectedDates((prev) => {
+          return [...prev, d]
+        })
+      }
+    }
+
   }
 
   function isSelected(d) {
@@ -76,47 +102,65 @@ function SimpleCalender() {
   let calenderTitle = moment(new Date(`${year}-${month}-${new Date().getDate()}`)).format("MMMM YYYY");
 
 
-  return (
-      <div className="container">
-        <div className='header'>
-          <button className="arrow_btns" onClick={() => prevMonth()}>
-            <RxDoubleArrowLeft />
-          </button>
-          <p>{calenderTitle}</p>
-          <button className="arrow_btns" onClick={() => nextMonth()}>
-            <RxDoubleArrowRight />
-          </button>
-        </div>
-        <div className='month_label_container'>
-          {months.map((month, i) => (
-            <div key={i} className="month_labels" style={{ ...centerStyle }}>{month.title}</div>
-          ))}
 
+  return (
+    <div className="container">
+      <div className='header'>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <button className="arrow_btns" onClick={() => prevYear()}>
+            <MdKeyboardDoubleArrowLeft size={20} />
+          </button>
+          <button onClick={() => prevMonth()} className="arrow_btns">
+            <MdKeyboardArrowLeft size={20} />
+          </button>
         </div>
-        <div className='days_container'>
-          {initialBlocks.map((_, i) => (
-            <div key={i} className="grid" />
-          ))}
-          {daysArray.map((day, i) => (
-            <div key={i}>
-              {isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && (
-                <div className='grid_current_date' style = {{ ...centerStyle }}>{day.number}</div>
-              )}
-              {isDisabled(`${year}-${month}-${day.number}`) && (
-                <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)} className="grid_disabled" style={{ ...centerStyle }}>{day.number}</div>
-              )}
-              {!isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && !isDisabled(`${year}-${month}-${day.number}`) && (
-                <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)} 
-                style={{ 
-                  backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white', 
-                  color: !isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white', 
-                  ...centerStyle 
-                }}  className="grid">{day.number}</div>
-              )}
-            </div>
-          ))}
+        <p>{calenderTitle}</p>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <button onClick={() => nextMonth()} className="arrow_btns">
+            <MdKeyboardArrowRight size={20} />
+          </button>
+          <button className="arrow_btns" onClick={() => nextYear()}>
+            <MdKeyboardDoubleArrowRight size={20} />
+          </button>
         </div>
+
       </div>
+      <div className='month_label_container'>
+        {months.map((month, i) => (
+          <div key={i} className="month_labels" style={{ ...centerStyle }}>{month.title}</div>
+        ))}
+
+      </div>
+      <div className='days_container'>
+        {initialBlocks.map((_, i) => (
+          <div key={i} className="grid" />
+        ))}
+        {daysArray.map((day, i) => (
+          <div key={i}>
+            {!isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && (
+              <div onClick={() => isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) ? null : selectedDate(`${year}-${month}-${day.number}`)} className='grid_current_date' style={{ ...centerStyle, backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'rgb(96, 166, 223)', }}>{day.number}</div>
+            )}
+            {isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && (
+              <div className="grid_disabled" style={{ ...centerStyle }}>{day.number}</div>
+            )}
+            {!isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && !isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && (
+              <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)}
+                onMouseOver={() => {
+                  setIsHover(true)
+                }}
+                onMouseLeave={() => {
+                  setIsHover(false)
+                }}
+                style={{
+                  backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
+                  color: !isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
+                  ...centerStyle
+                }} className="grid">{day.number}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

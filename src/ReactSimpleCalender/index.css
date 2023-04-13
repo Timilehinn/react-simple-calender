@@ -19,9 +19,9 @@
 }
 
 .month_label_container {
-  background-color: lightgrey;
+  background-color: rgb(235, 235, 235);
   text-transform: capitalize;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   display: flex; 
   flex-direction: row;
@@ -84,6 +84,7 @@
   border-radius: 50%;
   margin: 4px;
   font-size: 12px;
+  cursor: not-allowed;
 
 }
 
@@ -94,8 +95,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: .3;
 }
 
 .arrow_btns:hover {
   cursor: pointer;
+  opacity: .8;
 }
