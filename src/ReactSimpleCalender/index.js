@@ -2,25 +2,24 @@ import { useEffect, useState } from 'react';
 import './index.css';
 import moment from 'moment';
 import { RxDoubleArrowRight, RxDoubleArrowLeft } from 'react-icons/rx';
-import { MdKeyboardDoubleArrowRight, MdKeyboardDoubleArrowLeft, MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md'
+import { MdKeyboardDoubleArrowRight, MdKeyboardDoubleArrowLeft, MdKeyboardArrowRight, MdKeyboardArrowLeft, MdOutlineArrowLeft } from 'react-icons/md'
 
 /**
  * 
  * @param disabled takes in an array of dates in format: 2023-4-13
  * @returns blocks out specified dates
- * 
- * @param selectedDates array
- * @param setSelectedDates setStateAction
- * @param mode <string> "single" | "multiple" defines how many dates can be selected
+ * @param selectedDates Array
+ * @param setSelectedDates :- setStateAction
+ * @param mode <string> :- "single" | "multiple" | "datetime" defines how many dates can be selected. with date time, you can select a date and then choose from a list of times
+ * @param times Array :- take in an array of times Array<string> i.e ['2pm - 4pm', '4pm - 6pm']. times are defined by you
  * @param minSelectable <string> "YYYY-MM-DD" defines the minimum date that can be selected anything before is disabled 
+ * @param onSelect: ()=>void a function that determines what should happend when you click a date, should be used with single mode
  */
-function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSelectable }) {
+function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSelectable, onSelect, times }) {
 
-  const [year, setYear] = useState(2023)
-  const [month, setMonth] = useState(4)
-  const [isHover, setIsHover] = useState(false)
-  // const [selectedDates, setSelectedDates] = useState([])
-  // const disabled = ["2023-4-13"]
+  const [year, setYear] = useState(new Date().getFullYear())
+  const [month, setMonth] = useState(new Date().getMonth() + 1)
+  const [_times, showTimes] = useState(false)
 
   let currentDate = moment(new Date()).format("YYYY-MM-DD");
 
@@ -70,20 +69,34 @@ function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSe
 
 
   function selectedDate(d) {
-    if (mode == "single") {
-      setSelectedDates([d])
-    }
-    if (mode == 'multiple') {
-      const isSelected = selectedDates.find(date => date == d)
-      if (isSelected) {
-        var filteredDates = selectedDates.filter(date => date !== d)
-        setSelectedDates(filteredDates)
-      } else {
-        setSelectedDates((prev) => {
-          return [...prev, d]
-        })
+    try {
+      if (mode == "single") {
+        setSelectedDates([d])
       }
+      if (mode == 'multiple') {
+        const isSelected = selectedDates.find(date => date == d)
+        if (isSelected) {
+          var filteredDates = selectedDates.filter(date => date !== d)
+          setSelectedDates(filteredDates)
+        } else {
+          setSelectedDates((prev) => {
+            return [...prev, d]
+          })
+        }
+      }
+
+      /**
+       *  datetime will override single, because it runs after a day is clicked/selected
+       *  the onselect function won't run
+       * */ 
+      if(mode == "datetime"){
+        showTimes(true)
+      }else if(mode == 'single' && onSelect !== undefined){onSelect()}
+
+    } catch (error) {
+      console.warn(error)
     }
+
 
   }
 
@@ -107,13 +120,17 @@ function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSe
     if (minSelectable) {
       const d_1 = moment(d)
       const d_2 = moment(minSelectable)
-
       return d_1.isBefore(d_2)
     } else {
       return false
     }
   }
 
+  const doesTimesArrayExist = () => {
+    if(times == undefined) return false
+    else if(times.length == 0 || undefined) return false
+    else return true
+  }
 
   return (
     <div className="container">
@@ -144,10 +161,31 @@ function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSe
 
       </div>
       <div className='days_container'>
-        {initialBlocks.map((_, i) => (
-          <div key={i} className="grid_null" />
-        ))}
-        {daysArray.map((day, i) => (
+       
+        
+        {_times? (
+          <>
+          <div style={{ width: '100%', display: 'flex', justifyContent:'flex-start', marginTop: '10px' }}>
+            <span onClick={()=>showTimes(false)} style={{ cursor: 'pointer' }}>
+            <MdKeyboardArrowLeft size={25} />
+            </span>
+          </div>
+            <div style={{ height: '210px', width: '100%', display: 'flex', overflowY: 'scroll', flexDirection: 'column', alignItems: 'center', paddingBottom: '20px' }}>
+              {times && times.map((time, i)=>(
+                <div key={i} style={{ minHeight: '35px', width: '150px', borderRadius: '5px', border: '1px solid grey', margin: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{time}</div>
+              ))}
+              {!doesTimesArrayExist() && (
+                <p style={{ color: 'black' }}>No Times Available</p>
+              )}
+            </div>
+          </>
+
+          ): (
+            <>
+             {initialBlocks.map((_, i) => (
+              <div key={i} className="grid_null" />
+            ))}
+            {daysArray.map((day, i) => (
           <div key={i}>
             {isSelectable(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) ? (
               <div className="grid_disabled" style={{ ...centerStyle }}>{day.number}</div>
@@ -161,12 +199,6 @@ function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSe
                 )}
                 {!isCurrentDate(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number.toString().length === 1 ? "0" + day.number : day.number}`) && !isDisabled(`${year}-${month.toString().length == 1 ? "0" + month : month}-${day.number}`) && (
                   <div onClick={() => selectedDate(`${year}-${month}-${day.number}`)}
-                    onMouseOver={() => {
-                      setIsHover(true)
-                    }}
-                    onMouseLeave={() => {
-                      setIsHover(false)
-                    }}
                     style={{
                       backgroundColor: isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
                       color: !isSelected(`${year}-${month}-${day.number}`) ? "black" : 'white',
@@ -176,8 +208,10 @@ function SimpleCalender({ disabled, selectedDates, setSelectedDates, mode, minSe
               </div>
             )}
           </div>
-
         ))}
+            </>
+          )}
+        
       </div>
     </div>
   );
