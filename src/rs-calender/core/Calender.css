@@ -1,0 +1,28 @@
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container {
+  height: auto;
+  width: auto;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  border: 0px;
+  background-color: transparent;
+  transition: .3s;
+}
+
+.button:hover {
+  cursor: pointer;
+  transition: .3s;
+  background-color: #F0F0F0;
+}
+
