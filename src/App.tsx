@@ -25,45 +25,6 @@ function App() {
         onChange={(params) => {setDate(params.date); console.log(JSON.stringify(params))}}
         titleFormat={'MMMM YYYY'}
         daysFormat={2}
-        // calenderStyle={{
-        //   currentDay: {
-        //     bgColor: 'red',
-        //     color: 'green',
-        //   },
-        //   tileRadius: '200px',
-        //   selectedDays: {
-        //     bgColor: 'violet'
-        //   },
-        //   calenderContainer: {
-        //     bgColor: 'violet'
-        //   }
-        // }}
-        // renderHeader={(params) => (
-        //   <div style={{
-        //     backgroundColor: 'green',
-        //     width: '100%',
-        //   }}>
-        //     <p onClick={() => params.showMonthView()}>{params.title}</p>
-        //     <p onClick={() => params.prevMonth()}>prev</p>
-        //     <p onClick={() => params.nextMonth()}>next</p>
-        //   </div>
-        // )}
-        // renderMonthView={(params) => (
-        //   <div style={{ height: '100%', width: '100%' }}>
-        //     <p style={{ margin: 0, padding: 0 }} onClick={() => params.goBack()}>Go back</p>
-        //     <p style={{ margin: 0, padding: 0 }} onClick={() => params.showYearView()}>Year view {params.title}</p>
-        //     {params.months.map((month, i) => (
-        //       <p style={{ margin: 0, padding: 0 }} onClick={() => params.selectMonth(month.value)}>{month.label}</p>
-        //     ))}
-        //   </div>
-        // )}
-        // renderYearView={(params) => (
-        //   <div style={{ height: '100%', width: "100%", backgroundColor: 'violet' }}>
-        //     {params.years.map(year => (
-        //       <p onClick={()=>params.selectYear(year)}>{year}</p>
-        //     ))}
-        //   </div>
-        // )}
       />
     </div>
   );
