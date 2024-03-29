@@ -1,46 +1,67 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Logo](https://imgur.com/uf3uc4H.png)
 
-## Available Scripts
 
-In the project directory, you can run:
+# react-simple-calender
 
-### `npm start`
+A simple calender component for React
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Usage/Examples
 
-### `npm test`
+```javascript
+import React, { useState } from 'react';
+import Calender from 'react-simple-calender';
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+function App() {
 
-### `npm run build`
+  const [date, setDate] = useState(new Date());
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  return (
+    <div className="App">
+      <Calender
+        preselectedDates={[
+          '2024-03-20',
+          '2024-03-23'
+        ]}
+        disabledDates={[
+          '2024-03-28',
+          '2024-03-29',
+          '2024-04-2'
+        ]}
+        multiselect={false}
+        onChange={(params) => {setDate(params.date); console.log(JSON.stringify(params))}}
+        titleFormat={'MMMM YYYY'}
+        daysFormat={2}
+      />
+    </div>
+  );
+}
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+export default App;
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Guide
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```javascript
+  import Calender from 'react-simple-calender
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+| Prop name | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `calenderSize` | `number` | **Optional**. This will determine the height and width of the Calender container, default value is 300. |
+| `selectable` | `boolean` | **Optional**. If you want the dates on the calender to be selectable, true by default |
+| `disabledDates` | `string[]` | **Optional**. An array of dates to disable. **Example** ['2024-05-07', '2024-05-08', etc] |
+| `minDate` | `string[]` | **Optional**. Dates before this day will disabled by default  |
+| `onChange` | `OnChangeEvent { date: Date, selectedDates: string[] }` | **Optional**. Dates before this day will disabled by default  |
+| `preselectedDates` | `string[]` | **Optional**. Dates before this day will disabled by default, **Example** ['2024-05-07', '2024-05-08', etc]  |
+| `titleFormat` | `'MMM YY', 'MMM YYY', 'MMMM YY', 'MMMM YYYY', 'MM YY';` | **Optional**. Prop to change title format   |
+| `daysFormat` | `number` | **Optional**. Prop to choose how many letters are shown for days i.e Sun or S   |
+| `calenderStyle` | `CalenderStyle` | **Optional**. Custom style for all calender components  |
+| `renderHeader` | `(props: HeaderProps) => void` | **Optional**.Render a custom calender header  |
+| `multiselect` | `boolean` | **Optional**. Enable multiple date selection  |
+| `renderMonthView` | `(props: MonthViewProps) => void` | **Optional**. Render a custom view for Month list  |
+| `renderYearView` | `(props: YearViewProps) => void` | **Optional**. Render a custom view for Year list  |
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
